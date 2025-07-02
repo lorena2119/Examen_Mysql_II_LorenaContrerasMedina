@@ -69,7 +69,7 @@ BEGIN
     FROM municipio AS m 
     INNER JOIN clientes AS c ON c.municipio_id = m.id
     WHERE c.nombre = nombre_cliente
-    GROUP BY m.nombre;
+    GROUP BY c.nombre;
 
     RETURN _nombre_municipio;
 END $$
@@ -79,19 +79,19 @@ SELECT fn_municipio_por_nombre_cliente('Andrés Mendoza') AS 'Municipio';
 -- 5. Crea una función llamada `fn_departamento_por_municipio(municipio_id INT)` que retorne el nombre del departamento asociado.
 DELIMITER $$
 DROP FUNCTION IF EXISTS fn_departamento_por_municipio $$
-CREATE FUNCTION IF NOT EXISTS fn_municipio_por_nombre_cliente(_municipio_id INT)
+CREATE FUNCTION IF NOT EXISTS fn_departamento_por_municipio(_municipio_id INT)
 RETURNS VARCHAR(100)
 NOT DETERMINISTIC
 READS SQL DATA 
 BEGIN
-    DECLARE _nombre_municipio VARCHAR(100);
+    DECLARE _nombre_departamento VARCHAR(100);
 
-    SELECT m.nombre INTO _nombre_municipio
-    FROM municipio AS m 
-    INNER JOIN clientes AS c ON c.municipio_id = m.id
-    WHERE c.nombre = nombre_cliente;
+    SELECT d.nombre INTO _nombre_departamento
+    FROM departamento AS d
+    INNER JOIN municipio AS m ON m.dep_id = d.id
+    WHERE m.id= _municipio_id;
 
-    RETURN _nombre_municipio;
+    RETURN _nombre_departamento;
 END $$
 DELIMITER ;
-SELECT fn_municipio_por_nombre_cliente('Andrés Mendoza') AS 'Municipio';
+SELECT fn_departamento_por_municipio(1) AS 'Departamento';
